@@ -15,7 +15,6 @@ import java.sql.Date;
 public class Book implements GenericEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @OneToMany(mappedBy = "book_id")
     @Column(name = "book_id", nullable = false)
     private Integer id;
 

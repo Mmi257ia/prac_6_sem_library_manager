@@ -14,7 +14,6 @@ import jakarta.persistence.*;
 public class Reader implements GenericEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @OneToMany(mappedBy = "reader_id")
     @Column(name = "reader_id", nullable = false, length = 100)
     private Integer id;
 

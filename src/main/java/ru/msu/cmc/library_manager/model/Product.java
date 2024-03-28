@@ -17,7 +17,6 @@ import java.util.List;
 public class Product implements GenericEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @OneToMany(mappedBy = "product_id")
     @Column(name = "product_id", nullable = false)
     private Integer id;
 
