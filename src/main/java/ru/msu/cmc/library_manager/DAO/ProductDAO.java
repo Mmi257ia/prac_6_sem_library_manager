@@ -21,11 +21,14 @@ public interface ProductDAO extends GenericDAO<Product> {
         private Integer yearOfPublishingBegin;
         private Integer yearOfPublishingEnd;
 
-        public static Filter getFilterByAuthors(String isbn, String name, @NonNull List<Author> authors, Publisher publisher,
+        public static Filter getFilterByAuthors(String isbn, String name, List<Author> authors, Publisher publisher,
                                                 Integer yearOfPublishingBegin, Integer yearOfPublishingEnd) {
             List<Integer> list = new ArrayList<Integer>();
-            for (Author author : authors)
-                list.add(author.getId());
+            if (authors == null)
+                list = null;
+            else
+                for (Author author : authors)
+                    list.add(author.getId());
             return new Filter(isbn, name, list, publisher, yearOfPublishingBegin, yearOfPublishingEnd);
         }
     }

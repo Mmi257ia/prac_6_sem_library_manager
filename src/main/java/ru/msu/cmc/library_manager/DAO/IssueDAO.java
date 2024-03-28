@@ -9,6 +9,7 @@ import ru.msu.cmc.library_manager.model.Issue;
 import ru.msu.cmc.library_manager.model.Reader;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 public interface IssueDAO extends GenericDAO<Issue> {
@@ -26,6 +27,22 @@ public interface IssueDAO extends GenericDAO<Issue> {
         private Date deadlineBegin;
         private Date deadlineEnd;
         private Boolean isReturned;
+
+        public void addReader(Reader reader) {
+            if (reader != null) {
+                if (readers == null)
+                    readers = new ArrayList<Reader>();
+                readers.add(reader);
+            }
+        }
+
+        public void addBook(Book book) {
+            if (book != null) {
+                if (books == null)
+                    books = new ArrayList<Book>();
+                books.add(book);
+            }
+        }
     }
     List<Issue> getIssuesByFilter(Filter filter);
 }
