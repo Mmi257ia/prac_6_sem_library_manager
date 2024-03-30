@@ -32,12 +32,15 @@ public class ProductsController {
     @ToString
     class ProductWithCountAndAuthors {
         Product product;
-        int count;
+        int count; // in library
+        int total; // in db
         List<Author> authors;
+        String authorsString;
         public ProductWithCountAndAuthors(Product product) {
             this.product = product;
-            int res = 0;
+            int resCount = 0;
             List<Book> books = bookDAO.getBooksByFilter(new BookDAO.Filter(product, null, null));
+            total = books.size();
             for (Book book : books) {
                 List<Book> bookInList = new ArrayList<Book>();
                 bookInList.add(book);
@@ -46,20 +49,27 @@ public class ProductsController {
                 filter.setIsReturned(false);
                 List<Issue> issues = issueDAO.getIssuesByFilter(filter);
                 if (issues.isEmpty())
-                    res++;
+                    resCount++;
             }
-            count = res;
+            count = resCount;
             authors = new ArrayList<Author>();
             for (Integer authorId : product.getAuthors())
                 if (authorId != null)
                     authors.add(authorDAO.getById(authorId));
+
+            authorsString = "";
+            for (Author author : authors) {
+                if (!authorsString.isEmpty())
+                    authorsString += ", ";
+                authorsString += author.getName();
+            }
         }
     }
 
     private List<Author> getAuthorsList(String authors) throws IllegalArgumentException {
         if (authors == null || authors.isEmpty())
             return null;
-        String[] authorNames = authors.split(",");
+        String[] authorNames = authors.split(", ");
         List<Author> authorsList = new ArrayList<Author>();
         for (String authorName : authorNames) {
             List<Author> queryResult = authorDAO.getAuthorByName(authorName);
@@ -74,7 +84,7 @@ public class ProductsController {
     private List<Integer> getAuthorIdsList(String authors) throws IllegalArgumentException {
         if (authors == null || authors.isEmpty())
             return null;
-        String[] authorNames = authors.split(",");
+        String[] authorNames = authors.split(", ");
         List<Integer> authorIdsList = new ArrayList<Integer>();
         for (String authorName : authorNames) {
             List<Author> queryResult = authorDAO.getAuthorByName(authorName);

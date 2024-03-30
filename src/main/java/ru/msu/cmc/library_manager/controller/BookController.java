@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.msu.cmc.library_manager.DAO.AuthorDAO;
 import ru.msu.cmc.library_manager.DAO.BookDAO;
 import ru.msu.cmc.library_manager.DAO.IssueDAO;
 import ru.msu.cmc.library_manager.lib.BookAndStatus;
@@ -23,6 +24,8 @@ import java.util.List;
 @Controller
 public class BookController {
     @Autowired
+    private AuthorDAO authorDAO;
+    @Autowired
     private BookDAO bookDAO;
     @Autowired
     private IssueDAO issueDAO;
@@ -37,13 +40,23 @@ public class BookController {
         List<Event> eventsList = Event.eventsFromIssues(issueDAO.getIssuesByFilter(issueFilter));
         eventsList.sort(Comparator.reverseOrder());
         model.addAttribute("eventsList", eventsList);
+
         BookAndStatus bookAndStatus = new BookAndStatus(book, issueDAO);
         if (bookAndStatus.isIssued())
             model.addAttribute("issued", true);
         else
             model.addAttribute("issued", false);
 
-        return "book";
+        String authors = "";
+        for (Integer authorId : book.getProduct().getAuthors()) {
+            if (!authors.isEmpty())
+                authors += ", ";
+            if (authorId != null)
+                authors += authorDAO.getById(authorId).getName();
+        }
+        model.addAttribute("authors", authors);
+
+        return "books";
     }
 
     @PostMapping(value = "/books/{id}/edit")

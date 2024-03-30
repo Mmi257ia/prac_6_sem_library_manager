@@ -24,6 +24,7 @@ public class Event implements Comparable<Event> {
     private String readerName;
     private Date date;
     private Date deadline;
+    private boolean isCurrentlyIssued;
 
     public static List<Event> eventsFromIssues(List<Issue> issuesList) {
         if (issuesList == null)
@@ -33,10 +34,12 @@ public class Event implements Comparable<Event> {
             Book book = issue.getBook();
             Reader reader = issue.getReader();
             eventsList.add(new Event(issue.getId(), true, book.getId(), book.getProduct().getName(),
-                    reader.getId(), reader.getName(), issue.getIssued(), issue.getDeadline()));
+                    reader.getId(), reader.getName(), issue.getIssued(), issue.getDeadline(),
+                    issue.getReturned() == null));
             if (issue.getReturned() != null)
                 eventsList.add(new Event(issue.getId(), false, book.getId(), book.getProduct().getName(),
-                        reader.getId(), reader.getName(), issue.getReturned(), issue.getDeadline()));
+                        reader.getId(), reader.getName(), issue.getReturned(), issue.getDeadline(),
+                        false));
         }
         return eventsList;
     }
@@ -45,6 +48,11 @@ public class Event implements Comparable<Event> {
     public int compareTo(Event o) {
         if (o == null)
             return 1;
-        return this.date.compareTo(o.getDate());
+        int res = this.date.compareTo(o.getDate());
+        if (res == 0)
+            res = this.issueId - o.getIssueId();
+        if (res == 0)
+            res = issue ? -1 : 1;
+        return res;
     }
 }

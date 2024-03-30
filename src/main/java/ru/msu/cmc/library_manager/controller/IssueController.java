@@ -77,6 +77,6 @@ public class IssueController {
         issue.setReturned(new Date(new java.util.Date().getTime()));
         issueDAO.update(issue);
 
-        return "/index";
+        return "redirect:/index";
     }
 }

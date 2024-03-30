@@ -38,11 +38,14 @@ public class ProductController {
         Product product = productDAO.getById(id);
         model.addAttribute("product", product);
 
-        List<Author> authorsList = new ArrayList<Author>();
-        for (Integer authorId : product.getAuthors())
+        String authors = "";
+        for (Integer authorId : product.getAuthors()) {
+            if (!authors.isEmpty())
+                authors += ", ";
             if (authorId != null)
-                authorsList.add(authorDAO.getById(authorId));
-        model.addAttribute("authorsList", authorsList);
+                authors += authorDAO.getById(authorId).getName();
+        }
+        model.addAttribute("authors", authors);
 
         BookDAO.Filter filter = new BookDAO.Filter(product, null, null);
         List<Book> booksNoStatusList = bookDAO.getBooksByFilter(filter);
