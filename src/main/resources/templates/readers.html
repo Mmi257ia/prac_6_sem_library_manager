@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru-RU">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/styles/bootstrap/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/styles/libraryStyles.css">
+    <title>Читатели</title>
+</head>
+<body>
+<div th:replace="index :: header"></div>
+<p class="pageName">Читатели</p>
+
+<div class="container-fluid" style="width: 100%;"> <!-- Ширина от 80% до 100% оптимальна -->
+    <div class="row tableRow tableHeaderRow"> <!-- Заголовок -->
+        <div class="col-sm-1 tableVerticalLineRight">
+            <p class="tableText">Чит. билет</p>
+        </div>
+        <div class="col-sm tableVerticalLineRight">
+            <p class="tableText">ФИО</p>
+        </div>
+        <div class="col-sm tableVerticalLineRight">
+            <p class="tableText">Адрес</p>
+        </div>
+        <div class="col-sm tableVerticalLineRight">
+            <p class="tableText">Телефон</p>
+        </div>
+        <div class="col-sm-1"></div>
+        <div class="col-sm-1"></div>
+        <div class="col-sm-1"></div>
+    </div>
+    <div th:each="reader : ${readersList}">
+        <div class="row tableRow"> <!-- Контент -->
+            <div class="col-sm-1 tableVerticalLineRight">
+                <p th:text="${reader.id}" class="tableText"></p>
+            </div>
+            <div class="col-sm tableVerticalLineRight">
+                <p th:text="${reader.name}" class="tableText"></p>
+            </div>
+            <div class="col-sm tableVerticalLineRight">
+                <p th:text="${reader.address}" class="tableText"></p>
+            </div>
+            <div class="col-sm tableVerticalLineRight">
+                <p th:text="${reader.phone}" class="tableText"></p>
+            </div>
+            <div class="col-sm-1 tableButtonBlock tableVerticalLineRight">
+                <a th:href="@{/readers/{id}(id=${reader.id})}">
+                    <button class="internalButton">Информация</button>
+                </a>
+            </div>
+            <div class="col-sm-1 tableButtonBlock tableVerticalLineRight">
+                <form method="get" action="/issue" class="internalButton">
+                    <input type="hidden" name="readerId" th:value="${reader.id}">
+                    <button type="submit" class="internalButton">Выдать книгу</button>
+                </form>
+            </div>
+            <div class="col-sm-1 tableButtonBlock">
+                <form method="post" action="/readers/delete" class="internalButton">
+                    <input type="hidden" name="id" th:value="${reader.id}">
+                    <button type="submit" class="internalButton deleteButton">Удалить из базы</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="row tableRow"></div>
+    <form class="row tableRow"> <!-- Форма -->
+        <div class="col-sm-1 tableVerticalLineRight">
+            <input type="text" name="id" th:value="${id}" class="internalButton" placeholder="Чит. билет">
+        </div>
+        <div class="col-sm tableVerticalLineRight">
+            <input type="text" name="name" th:value="${name}" class="internalButton" placeholder="Имя">
+        </div>
+        <div class="col-sm tableVerticalLineRight">
+            <input type="text" name="address" th:value="${address}" class="internalButton" placeholder="Адрес">
+        </div>
+        <div class="col-sm tableVerticalLineRight">
+            <input type="text" name="phone" th:value="${phone}" class="internalButton" placeholder="Телефон">
+        </div>
+        <div class="col-sm-1 tableButtonBlock tableVerticalLineRight">
+            <button type="submit" formmethod="get" formaction="/readers" class="internalButton">Фильтр</button>
+        </div>
+        <div class="col-sm-1 tableButtonBlock tableVerticalLineRight">
+            <button type="submit" formmethod="post" formaction="/readers/add" class="internalButton">Добавить</button>
+        </div>
+        <div class="col-sm-1"></div>
+    </form>
+    <div class="row tableRow"></div>
+</div>
+<p>Выше Вы можете ввести данные в соответствующие поля, чтобы отфильтровать читателей по ним или добавить нового.</p>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru-RU">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/styles/bootstrap/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/styles/libraryStyles.css">
+    <title>Книги</title>
+</head>
+<body>
+<div th:replace="index :: header"></div>
+<p class="pageName">Книги</p>
+
+<div class="container-fluid" style="width: 100%;">
+    <div class="row tableRow tableHeaderRow"> <!-- Заголовок -->
+        <div class="col-sm-1 tableVerticalLineRight">
+            <p class="tableText">ISBN</p>
+        </div>
+        <div class="col-sm tableVerticalLineRight">
+            <p class="tableText">Название</p>
+        </div>
+        <div class="col-sm tableVerticalLineRight">
+            <p class="tableText">Авторы</p>
+        </div>
+        <div class="col-sm-1 tableVerticalLineRight">
+            <p class="tableText">Издательство</p>
+        </div>
+        <div class="col-sm-1 tableVerticalLineRight">
+            <p class="tableText">Год издания</p>
+        </div>
+        <div class="col-sm-1 tableVerticalLineRight">
+            <p class="tableText">В библиотеке/всего шт.</p>
+        </div>
+        <div class="col-sm-1"></div>
+        <div class="col-sm-1"></div>
+    </div>
+    <div th:each="productWithCount : ${productsList}">
+        <div class="row tableRow"> <!-- Контент -->
+            <div class="col-sm-1 tableVerticalLineRight">
+                <p th:text="${productWithCount.product.isbn}" class="tableText"></p>
+            </div>
+            <div class="col-sm tableVerticalLineRight">
+                <p th:text="${productWithCount.product.name}" class="tableText"></p>
+            </div>
+            <div class="col-sm tableVerticalLineRight">
+                <p th:text="${productWithCount.authorsString}" class="tableText"></p>
+            </div>
+            <div class="col-sm-1 tableVerticalLineRight">
+                <p th:text="${productWithCount.product.publisher.name}" class="tableText"></p>
+            </div>
+            <div class="col-sm-1 tableVerticalLineRight">
+                <p th:if="${productWithCount.product.yearOfPublishing == null}" class="tableText">-</p>
+                <p th:text="${productWithCount.product.yearOfPublishing}" class="tableText"></p>
+            </div>
+            <div class="col-sm-1 tableVerticalLineRight">
+                <p class="tableText">
+                    <span th:text="${productWithCount.count}"></span>
+                    /
+                    <span th:text="${productWithCount.total}"></span>
+                </p>
+            </div>
+            <div class="col-sm-1 tableButtonBlock tableVerticalLineRight">
+                <a th:href="@{/products/{id}(id=${productWithCount.product.id})}">
+                    <button class="internalButton">Информация</button>
+                </a>
+            </div>
+            <div class="col-sm-1 tableButtonBlock">
+                <form method="post" action="/products/delete" class="internalButton">
+                    <input type="hidden" name="id" th:value="${productWithCount.product.id}">
+                    <button type="submit" class="internalButton deleteButton">Удалить из базы</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="row tableRow"></div>
+    <form> <!-- Форма добавления -->
+        <div class="row tableRow">
+            <div class="col-sm-1 tableVerticalLineRight">
+                <input type="text" name="isbn" th:value="${isbn}" class="internalButton" placeholder="ISBN">
+            </div>
+            <div class="col-sm tableVerticalLineRight">
+                <input type="text" name="name" th:value="${name}" class="internalButton" placeholder="Название">
+            </div>
+            <div class="col-sm tableVerticalLineRight">
+                <input type="text" name="authors" th:value="${authors}" class="internalButton" placeholder="Авторы">
+            </div>
+            <div class="col-sm-1 tableVerticalLineRight">
+                <input type="text" name="publisher" th:value="${publisher}" class="internalButton" placeholder="Издательство">
+            </div>
+            <div class="col-sm-1 tableVerticalLineRight">
+                <input type="text" name="yearOfPublishing" th:value="${yearOfPublishing}" class="internalButton" placeholder="Год издания">
+            </div>
+            <div class="col-sm-1 tableVerticalLineRight"></div>
+            <div class="col-sm-1 tableVerticalLineRight">
+                <button type="submit" formmethod="post" formaction="/products/add" class="internalButton">Добавить</button>
+            </div>
+            <div class="col-sm-1"></div>
+        </div>
+        <div class="row tableRow"> <!-- Ряд пониже для фильтрации -->
+            <div class="col-sm-1"></div>
+            <div class="col-sm"></div>
+            <div class="col-sm tableVerticalLineRight">
+            </div>
+            <div class="col-sm-1 tableVerticalLineRight">
+                <input type="text" name="yearOfPublishingBegin" th:value="${yearOfPublishingBegin}" class="internalButton" placeholder="Год издания с">
+            </div>
+            <div class="col-sm-1 tableVerticalLineRight">
+                <input type="text" name="yearOfPublishingEnd" th:value="${yearOfPublishingEnd}" class="internalButton" placeholder="по">
+            </div>
+            <div class="col-sm-1 tableVerticalLineRight" style="text-align: center;">
+                <label for="isPresent" class="tableText">В наличии:</label>
+                <input id="isPresent" type="radio" name="present" th:value="1">
+            </div>
+            <div class="col-sm-1 tableVerticalLineRight">
+                <button type="submit" formmethod="get" formaction="/products" class="internalButton">Фильтр</button>
+            </div>
+            <div class="col-sm-1"></div>
+        </div>
+    </form>
+    <div class="row tableRow"></div>
+</div>
+<p>Выше Вы можете ввести данные в соответствующие поля, чтобы добавить новую книгу или отфильтровать их список. Конкретный год издания учитывается только при добавлении, а их промежуток - только при фильтрации. Пожалуйста, разделяйте имена авторов, если их несколько, запятой и пробелом.</p>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru-RU">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/styles/bootstrap/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/styles/libraryStyles.css">
+    <title>Экземпляры книги</title>
+</head>
+<body>
+<div th:replace="index :: header"></div>
+<p class="pageName">Экземпляры книги "<span th:text="${product.name}"></span>"</p>
+<div>
+    <p class="info">ISBN:
+        <span th:text="${product.isbn}"></span>
+    </p>
+    <p class="info">Авторы:
+        <a th:href="@{/products?authors={authors}(authors=${authors})}" th:text="${authors}"></a>
+    </p>
+    <p class="info">Издательство:
+        <a th:href="@{/products?publisher={publisher}(publisher=${product.publisher.name})}" th:text="${product.publisher.name}"></a>
+    </p>
+    <p class="info">Год издания:
+        <span th:text="${product.yearOfPublishing}"></span>
+        <span th:if="${product.yearOfPublishing == null}">-</span>
+    </p>
+</div>
+
+<div class="container-fluid" style="width: 100%;">
+    <div class="row tableRow tableHeaderRow"> <!-- Заголовок -->
+        <div class="col-sm tableVerticalLineRight">
+            <p class="tableText">ID</p>
+        </div>
+        <div class="col-sm tableVerticalLineRight">
+            <p class="tableText">Дата прибытия в библиотеку</p>
+        </div>
+        <div class="col-sm tableVerticalLineRight">
+            <p class="tableText">Статус</p>
+        </div>
+        <div class="col-sm tableVerticalLineRight">
+            <p class="tableText">Срок возврата</p>
+        </div>
+        <div class="col-sm-1"></div>
+        <div class="col-sm-1"></div>
+        <div class="col-sm-1"></div>
+    </div>
+    <div th:each="bookWithStatus : ${booksList}">
+        <div class="row tableRow"> <!-- Контент -->
+            <div class="col-sm tableVerticalLineRight">
+                <p th:text="${bookWithStatus.book.id}" class="tableText"></p>
+            </div>
+            <div class="col-sm tableVerticalLineRight">
+                <p th:if="${bookWithStatus.book.receivingDate == null}" class="tableText">-</p>
+                <p th:text="${bookWithStatus.book.receivingDate}" class="tableText"></p>
+            </div>
+            <div class="col-sm tableVerticalLineRight">
+                <p th:if="${bookWithStatus.issued}" class="tableText" style="color: red;">У читателя</p>
+                <p th:if="${!bookWithStatus.issued}" class="tableText" style="color: green;">В библиотеке</p>
+            </div>
+            <div class="col-sm tableVerticalLineRight">
+                <p th:if="${bookWithStatus.deadline == null}" class="tableText">-</p>
+                <p th:text="${bookWithStatus.deadline}" class="tableText"></p>
+            </div>
+            <div class="col-sm-1 tableButtonBlock tableVerticalLineRight">
+                <a th:href="@{/books/{id}(id=${bookWithStatus.book.id})}">
+                    <button class="internalButton">Информация</button>
+                </a>
+            </div>
+            <div class="col-sm-1 tableButtonBlock tableVerticalLineRight">
+                <form method="get" action="/issue" class="internalButton" th:if="${!bookWithStatus.issued}">
+                    <input type="hidden" name="bookId" th:value="${bookWithStatus.book.id}">
+                    <button type="submit" class="internalButton">Выдать книгу</button>
+                </form>
+                <form method="post" action="/return" class="internalButton" th:if="${bookWithStatus.issued}">
+                    <input type="hidden" name="bookId" th:value="${bookWithStatus.book.id}">
+                    <button type="submit" class="internalButton">Вернуть книгу</button>
+                </form>
+            </div>
+            <div class="col-sm-1 tableButtonBlock">
+                <form method="post" th:action="@{/products/{id}/delete(id=${product.id})}" class="internalButton">
+                    <input type="hidden" name="bookId" th:value="${bookWithStatus.book.id}">
+                    <button type="submit" class="internalButton deleteButton">Удалить из базы</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="row tableRow"></div>
+    <form method="post" th:action="@{/products/{id}/add(id=${product.id})}" class="row tableRow"> <!-- Добавление книги -->
+        <div class="col-sm tableVerticalLineRight">
+            <p class="tableText" style="text-align: right;">Дата прибытия в библиотеку: </p>
+        </div>
+        <div class="col-sm tableVerticalLineRight">
+            <input type="date" name="receivingDate" class="internalButton">
+        </div>
+        <div class="col-sm tableVerticalLineRight">
+            <input type="submit" value="Добавить новый экземпляр" class="internalButton">
+        </div>
+        <div class="col-sm"></div>
+    </form>
+    <div class="row tableRow"></div>
+</div>
+<p>Выше Вы можете ввести дату прибытия нового экземпляра и внести его в базу.</p>
+</body>
+</html>

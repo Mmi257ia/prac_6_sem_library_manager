@@ -1,0 +1,113 @@
+<!-- На самом деле, правильнее было бы book, а не books -->
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru-RU">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/styles/bootstrap/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/styles/libraryStyles.css">
+    <title>Экземпляр книги</title>
+</head>
+<body>
+<div th:replace="index :: header"></div>
+<p class="pageName">Экземпляр книги "
+    <a th:href="@{/products/{id}(id=${book.product.id})}" th:text="${book.product.name}"></a>"
+</p>
+<div class="container-fluid"> <!-- Информация -->
+    <div class="row">
+        <div class="col">
+            <p class="info">ISBN:
+                <span th:text="${book.product.isbn}"></span>
+            </p>
+            <p class="info">Авторы:
+                <a th:href="@{/products?authors={authors}(authors=${authors})}" th:text="${authors}"></a>
+            </p>
+            <p class="info">Издательство:
+                <a th:href="@{/products?publisher={publisher}(publisher=${book.product.publisher.name})}" th:text="${book.product.publisher.name}"></a>
+            </p>
+            <p class="info">Год издания:
+                <span th:text="${book.product.yearOfPublishing}"></span>
+                <span th:if="${book.product.yearOfPublishing == null}">-</span>
+            </p>
+        </div>
+        <div class="col">
+            <p class="info">ID экземпляра: <span th:text="${book.id}"></span></p>
+            <p class="info">Дата прибытия: <span th:text="${book.receivingDate}"></span></p>
+            <p class="info" style="color: red;" th:if="${issued}"><span>Не в библиотеке</span></p>
+            <p class="info" style="color: green;" th:if="${!issued}"><span>В библиотеке</span></p>
+        </div>
+    </div>
+</div>
+<p class="pageName" style="margin-bottom: 0px;">История:</p>
+<div class="container-fluid" style="width: 100%;"> <!-- История -->
+    <div class="row tableRow tableHeaderRow">
+        <div class="col-sm tableVerticalLineRight">
+            <p class="tableText">Событие</p>
+        </div>
+        <div class="col-sm tableVerticalLineRight">
+            <p class="tableText">Читательский билет</p>
+        </div>
+        <div class="col-sm tableVerticalLineRight">
+            <p class="tableText">ФИО читателя</p>
+        </div>
+        <div class="col-sm tableVerticalLineRight">
+            <p class="tableText">Дата</p>
+        </div>
+        <div class="col-sm">
+            <p class="tableText">Срок возврата</p>
+        </div>
+    </div>
+    <div th:each="event : ${eventsList}">
+        <div class="row tableRow">
+            <div class="col-sm tableVerticalLineRight">
+                <p th:if="${event.issue}" class="tableText">Выдача</p>
+                <p th:if="${!event.issue}" class="tableText">Возврат</p>
+            </div>
+            <div class="col-sm tableVerticalLineRight">
+                <a th:href="@{/readers/{id}(id=${event.readerId})}">
+                    <p th:text="${event.readerId}" class="tableText"></p>
+                </a>
+            </div>
+            <div class="col-sm tableVerticalLineRight">
+                <a th:href="@{/readers/{id}(id=${event.readerId})}">
+                    <p th:text="${event.readerName}" class="tableText"></p>
+                </a>
+            </div>
+            <div class="col-sm tableVerticalLineRight">
+                <p th:text="${event.date}" class="tableText"></p>
+            </div>
+            <div class="col-sm">
+                <p th:if="${event.deadline == null}" class="tableText">-</p>
+                <p th:text="${event.deadline}" class="tableText"></p>
+            </div>
+        </div>
+    </div>
+    <div class="row tableRow"></div>
+    <div class="row tableRow">
+        <div class="col-sm tableVerticalLineRight"></div>
+        <div class="col-sm tableVerticalLineRight">
+            <form method="get" action="/issue" th:if="${!issued}">
+                <input type="hidden" name="bookId" th:value="${book.id}">
+                <button type="submit" class="internalButton">Выдать книгу</button>
+            </form>
+            <form method="post" action="/return" th:if="${issued}">
+                <input type="hidden" name="bookId" th:value="${book.id}">
+                <button type="submit" class="internalButton">Вернуть книгу</button>
+            </form>
+        </div>
+        <div class="col-sm tableVerticalLineRight"></div>
+        <form method="post" th:action="@{/books/{id}/extend(id=${book.id})}" th:if="${issued}" class="inlineForm">
+            <input type="hidden" name="issueId" th:value="${eventsList.get(0).issueId}">
+            <div class="col-sm tableVerticalLineRight">
+                <input type="date" name="date" class="internalButton">
+            </div>
+            <div class="col-sm">
+                <button type="submit" class="internalButton">Изменить срок возврата</button>
+            </div>
+        </form>
+    </div>
+    <div class="row tableRow"></div>
+</div>
+<p th:if="${issued}">Вы можете изменить срок возврата этой книги, указав новую дату выше справа. Отсутствие даты равносильно снятию ограничения на срок возврата.</p>
+</body>
+</html>

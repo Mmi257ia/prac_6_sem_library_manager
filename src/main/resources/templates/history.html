@@ -1,0 +1,98 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru-RU">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/styles/bootstrap/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/styles/libraryStyles.css">
+    <title>История</title>
+</head>
+<body>
+<div th:replace="index :: header"></div>
+<p class="pageName">История</p>
+
+<div class="container-fluid" style="width: 100%;">
+    <div class="row" style="border-bottom: 1px solid black;">
+        <div class="col-sm-3" style="text-align: right;">
+            <p>Фильтр:</p>
+        </div>
+        <div class="col-sm" style="text-align: left;">
+            <form method="get" action="/history" class="form-horizontal form-inline">
+                <label for="dateBegin">С: </label>
+                <input id="dateBegin" type="date" name="dateBegin" th:value="${dateBegin}">
+
+                <label for="dateEnd">По: </label>
+                <input id="dateEnd" type="date" name="dateEnd" th:value="${dateEnd}">
+
+                <label for="readerId">№ чит. билета: </label>
+                <input id="readerId" type="text" name="readerId" th:value="${readerId}">
+
+                <button type="submit">Отфильтровать</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid" style="width: 100%;">
+        <div class="row tableRow tableHeaderRow">
+            <div class="col-sm tableVerticalLineRight">
+                <p class="tableText">Событие</p>
+            </div>
+            <div class="col-sm tableVerticalLineRight">
+                <p class="tableText">ID книги</p>
+            </div>
+            <div class="col-sm tableVerticalLineRight">
+                <p class="tableText">Название книги</p>
+            </div>
+            <div class="col-sm tableVerticalLineRight">
+                <p class="tableText">Читательский билет</p>
+            </div>
+            <div class="col-sm tableVerticalLineRight">
+                <p class="tableText">ФИО читателя</p>
+            </div>
+            <div class="col-sm tableVerticalLineRight">
+                <p class="tableText">Дата</p>
+            </div>
+            <div class="col-sm">
+                <p class="tableText">Срок возврата</p>
+            </div>
+        </div>
+    <div th:each="event : ${eventsList}">
+        <div class="row tableRow">
+            <div class="col-sm tableVerticalLineRight">
+                <p th:if="${event.issue}" class="tableText">Выдача</p>
+                <p th:if="${!event.issue}" class="tableText">Возврат</p>
+            </div>
+            <div class="col-sm tableVerticalLineRight">
+                <a th:href="@{/books/{id}(id=${event.bookId})}">
+                    <p th:text="${event.bookId}" class="tableText"></p>
+                </a>
+            </div>
+            <div class="col-sm tableVerticalLineRight">
+                <a th:href="@{/products?name={name}(name=${event.bookName})}">
+                    <p th:text="${event.bookName}" class="tableText"></p>
+                </a>
+            </div>
+            <div class="col-sm tableVerticalLineRight">
+                <a th:href="@{/readers/{id}(id=${event.readerId})}">
+                    <p th:text="${event.readerId}" class="tableText"></p>
+                </a>
+            </div>
+            <div class="col-sm tableVerticalLineRight">
+                <a th:href="@{/readers?name={name}(name=${event.readerName})}">
+                    <p th:text="${event.readerName}" class="tableText"></p>
+                </a>
+            </div>
+            <div class="col-sm tableVerticalLineRight">
+                <p th:text="${event.date}" class="tableText"></p>
+            </div>
+            <div class="col-sm">
+                <p th:if="${event.deadline == null}" class="tableText">-</p>
+                <p th:text="${event.deadline}" class="tableText"></p>
+            </div>
+        </div>
+    </div>
+    <div class="row tableRow"></div>
+</div>
+</body>
+</html>

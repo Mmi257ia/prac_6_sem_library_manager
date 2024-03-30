@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru-RU">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/styles/bootstrap/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/styles/libraryStyles.css">
+    <title>Авторы</title>
+</head>
+<body>
+<div th:replace="index :: header"></div>
+<p class="pageName">Авторы</p>
+
+<div class="container-fluid" style="width: 75%;">
+    <div class="row">
+        <div class="col-sm" style="text-align: right;">
+            <p>Добавить нового автора - введите имя:</p>
+        </div>
+        <div class="col-sm" style="text-align: left;">
+            <form method="post" action="/authors/add">
+                <input name="name" type="text">
+                <button type="submit">Добавить</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid" style="width: 50%;">
+    <div th:each="author : ${authorsList}">
+        <div class="row tableRow">
+            <div class="col-sm">
+                <p th:text="${author.name}" class="tableText"></p>
+            </div>
+            <div class="col-sm tableButtonBlock">
+                <a th:href="@{/products?authors={name}(name=${author.name})}">
+                    <button class="internalButton buttonSideBorders">Книги автора</button>
+                </a>
+            </div>
+            <div class="col-sm tableButtonBlock" style="text-align: right;">
+                <form method="post" action="/authors/delete" class="inlineForm">
+                    <input type="hidden" name="id" th:value="${author.id}">
+                    <button type="submit" class="internalButton deleteButton">Удалить из базы</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="row tableRow"></div>
+</div>
+</body>
+</html>
