@@ -33,7 +33,7 @@ public class ReaderController {
 
         IssueDAO.Filter issueFilter = new IssueDAO.Filter();
         issueFilter.addReader(reader);
-        List<Event> eventsList = Event.eventsFromIssues(issueDAO.getIssuesByFilter(issueFilter));
+        List<Event> eventsList = Event.allEventsFromIssues(issueDAO.getIssuesByFilter(issueFilter));
         eventsList.sort(Comparator.reverseOrder());
         model.addAttribute("eventsList", eventsList);
         return "reader";

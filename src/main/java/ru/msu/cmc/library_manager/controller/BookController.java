@@ -37,7 +37,7 @@ public class BookController {
 
         IssueDAO.Filter issueFilter = new IssueDAO.Filter();
         issueFilter.addBook(book);
-        List<Event> eventsList = Event.eventsFromIssues(issueDAO.getIssuesByFilter(issueFilter));
+        List<Event> eventsList = Event.allEventsFromIssues(issueDAO.getIssuesByFilter(issueFilter));
         eventsList.sort(Comparator.reverseOrder());
         model.addAttribute("eventsList", eventsList);
 
