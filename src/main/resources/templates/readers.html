@@ -30,40 +30,39 @@
         <div class="col-sm-1"></div>
     </div>
     <div th:each="reader : ${readersList}">
-        <div class="row tableRow"> <!-- Контент -->
+        <div class="row tableRow" id="contentRow"> <!-- Контент -->
             <div class="col-sm-1 tableVerticalLineRight">
-                <p th:text="${reader.id}" class="tableText"></p>
+                <p th:text="${reader.id}" class="tableText" id="idShow"></p>
             </div>
             <div class="col-sm tableVerticalLineRight">
-                <p th:text="${reader.name}" class="tableText"></p>
+                <p th:text="${reader.name}" class="tableText" id="nameShow"></p>
             </div>
             <div class="col-sm tableVerticalLineRight">
-                <p th:text="${reader.address}" class="tableText"></p>
+                <p th:text="${reader.address}" class="tableText" id="addressShow"></p>
             </div>
             <div class="col-sm tableVerticalLineRight">
-                <p th:text="${reader.phone}" class="tableText"></p>
+                <p th:text="${reader.phone}" class="tableText" id="phoneShow"></p>
             </div>
             <div class="col-sm-1 tableButtonBlock tableVerticalLineRight">
                 <a th:href="@{/readers/{id}(id=${reader.id})}">
-                    <button class="internalButton">Информация</button>
+                    <button class="internalButton" id="infoButton">Информация</button>
                 </a>
             </div>
             <div class="col-sm-1 tableButtonBlock tableVerticalLineRight">
-                <form method="get" action="/issue" class="internalButton">
-                    <input type="hidden" name="readerId" th:value="${reader.id}">
-                    <button type="submit" class="internalButton">Выдать книгу</button>
-                </form>
+                <a th:href="@{/issue?readerId={readerId}(readerId=${reader.id})}">
+                    <button class="internalButton" id="issueButton">Выдать книгу</button>
+                </a>
             </div>
             <div class="col-sm-1 tableButtonBlock">
                 <form method="post" action="/readers/delete" class="internalButton">
                     <input type="hidden" name="id" th:value="${reader.id}">
-                    <button type="submit" class="internalButton deleteButton">Удалить из базы</button>
+                    <button type="submit" class="internalButton deleteButton" id="deleteButton">Удалить из базы</button>
                 </form>
             </div>
         </div>
     </div>
     <div class="row tableRow"></div>
-    <form class="row tableRow"> <!-- Форма -->
+    <form class="row tableRow" id="formRow"> <!-- Форма -->
         <div class="col-sm-1 tableVerticalLineRight">
             <input type="text" name="id" th:value="${id}" class="internalButton" placeholder="Чит. билет">
         </div>
@@ -77,10 +76,10 @@
             <input type="text" name="phone" th:value="${phone}" class="internalButton" placeholder="Телефон">
         </div>
         <div class="col-sm-1 tableButtonBlock tableVerticalLineRight">
-            <button type="submit" formmethod="get" formaction="/readers" class="internalButton">Фильтр</button>
+            <button type="submit" formmethod="get" formaction="/readers" class="internalButton" id="filterButton">Фильтр</button>
         </div>
         <div class="col-sm-1 tableButtonBlock tableVerticalLineRight">
-            <button type="submit" formmethod="post" formaction="/readers/add" class="internalButton">Добавить</button>
+            <button type="submit" formmethod="post" formaction="/readers/add" class="internalButton" id="addButton">Добавить</button>
         </div>
         <div class="col-sm-1"></div>
     </form>

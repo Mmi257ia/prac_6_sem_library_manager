@@ -12,15 +12,15 @@
 <p class="pageName">Экземпляры книги "<span th:text="${product.name}"></span>"</p>
 <div>
     <p class="info">ISBN:
-        <span th:text="${product.isbn}"></span>
+        <span th:text="${product.isbn}" id="isbnShow"></span>
     </p>
     <p class="info">Авторы:
-        <a th:href="@{/products?authors={authors}(authors=${authors})}" th:text="${authors}"></a>
+        <a th:href="@{/products?authors={authors}(authors=${authors})}" th:text="${authors}" id="authorsShow"></a>
     </p>
     <p class="info">Издательство:
-        <a th:href="@{/products?publisher={publisher}(publisher=${product.publisher.name})}" th:text="${product.publisher.name}"></a>
+        <a th:href="@{/products?publisher={publisher}(publisher=${product.publisher.name})}" th:text="${product.publisher.name}" id="publisherShow"></a>
     </p>
-    <p class="info">Год издания:
+    <p class="info" id="yearOfPublishingShow">Год издания:
         <span th:text="${product.yearOfPublishing}"></span>
         <span th:if="${product.yearOfPublishing == null}">-</span>
     </p>
@@ -45,41 +45,40 @@
         <div class="col-sm-1"></div>
     </div>
     <div th:each="bookWithStatus : ${booksList}">
-        <div class="row tableRow"> <!-- Контент -->
+        <div class="row tableRow" id="contentRow"> <!-- Контент -->
             <div class="col-sm tableVerticalLineRight">
-                <p th:text="${bookWithStatus.book.id}" class="tableText"></p>
+                <p th:text="${bookWithStatus.book.id}" class="tableText" id="idShow"></p>
             </div>
-            <div class="col-sm tableVerticalLineRight">
+            <div class="col-sm tableVerticalLineRight" id="receivingDateShow">
                 <p th:if="${bookWithStatus.book.receivingDate == null}" class="tableText">-</p>
                 <p th:text="${bookWithStatus.book.receivingDate}" class="tableText"></p>
             </div>
-            <div class="col-sm tableVerticalLineRight">
+            <div class="col-sm tableVerticalLineRight" id="statusShow">
                 <p th:if="${bookWithStatus.issued}" class="tableText" style="color: red;">У читателя</p>
                 <p th:if="${!bookWithStatus.issued}" class="tableText" style="color: green;">В библиотеке</p>
             </div>
-            <div class="col-sm tableVerticalLineRight">
+            <div class="col-sm tableVerticalLineRight" id="deadlineShow">
                 <p th:if="${bookWithStatus.deadline == null}" class="tableText">-</p>
                 <p th:text="${bookWithStatus.deadline}" class="tableText"></p>
             </div>
             <div class="col-sm-1 tableButtonBlock tableVerticalLineRight">
                 <a th:href="@{/books/{id}(id=${bookWithStatus.book.id})}">
-                    <button class="internalButton">Информация</button>
+                    <button class="internalButton" id="infoButton">Информация</button>
                 </a>
             </div>
             <div class="col-sm-1 tableButtonBlock tableVerticalLineRight">
-                <form method="get" action="/issue" class="internalButton" th:if="${!bookWithStatus.issued}">
-                    <input type="hidden" name="bookId" th:value="${bookWithStatus.book.id}">
-                    <button type="submit" class="internalButton">Выдать книгу</button>
-                </form>
+                <a th:href="@{/issue?bookId={bookId}(bookId=${bookWithStatus.book.id})}" th:if="${!bookWithStatus.issued}">
+                    <button class="internalButton" id="issueButton">Выдать книгу</button>
+                </a>
                 <form method="post" action="/return" class="internalButton" th:if="${bookWithStatus.issued}">
                     <input type="hidden" name="bookId" th:value="${bookWithStatus.book.id}">
-                    <button type="submit" class="internalButton">Вернуть книгу</button>
+                    <button type="submit" class="internalButton" id="returnButton">Вернуть книгу</button>
                 </form>
             </div>
             <div class="col-sm-1 tableButtonBlock">
                 <form method="post" th:action="@{/products/{id}/delete(id=${product.id})}" class="internalButton">
                     <input type="hidden" name="bookId" th:value="${bookWithStatus.book.id}">
-                    <button type="submit" class="internalButton deleteButton">Удалить из базы</button>
+                    <button type="submit" class="internalButton deleteButton" id="deleteButton">Удалить из базы</button>
                 </form>
             </div>
         </div>
@@ -90,10 +89,10 @@
             <p class="tableText" style="text-align: right;">Дата прибытия в библиотеку: </p>
         </div>
         <div class="col-sm tableVerticalLineRight">
-            <input type="date" name="receivingDate" class="internalButton">
+            <input type="date" name="receivingDate" class="internalButton" id="receivingDateInput">
         </div>
         <div class="col-sm tableVerticalLineRight">
-            <input type="submit" value="Добавить новый экземпляр" class="internalButton">
+            <button type="submit" class="internalButton" id="addButton">Добавить новый экземпляр</button>
         </div>
         <div class="col-sm"></div>
     </form>

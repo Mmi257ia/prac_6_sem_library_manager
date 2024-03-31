@@ -35,45 +35,45 @@
         <div class="col-sm-1"></div>
     </div>
     <div th:each="productWithCount : ${productsList}">
-        <div class="row tableRow"> <!-- Контент -->
+        <div class="row tableRow" id="contentRow"> <!-- Контент -->
             <div class="col-sm-1 tableVerticalLineRight">
-                <p th:text="${productWithCount.product.isbn}" class="tableText"></p>
+                <p th:text="${productWithCount.product.isbn}" class="tableText" id="isbnShow"></p>
             </div>
             <div class="col-sm tableVerticalLineRight">
-                <p th:text="${productWithCount.product.name}" class="tableText"></p>
+                <p th:text="${productWithCount.product.name}" class="tableText" id="nameShow"></p>
             </div>
             <div class="col-sm tableVerticalLineRight">
-                <p th:text="${productWithCount.authorsString}" class="tableText"></p>
+                <p th:text="${productWithCount.authorsString}" class="tableText" id="authorsShow"></p>
             </div>
             <div class="col-sm-1 tableVerticalLineRight">
-                <p th:text="${productWithCount.product.publisher.name}" class="tableText"></p>
+                <p th:text="${productWithCount.product.publisher.name}" class="tableText" id="publisherShow"></p>
             </div>
-            <div class="col-sm-1 tableVerticalLineRight">
+            <div class="col-sm-1 tableVerticalLineRight" id="yearOfPublishingShow">
                 <p th:if="${productWithCount.product.yearOfPublishing == null}" class="tableText">-</p>
                 <p th:text="${productWithCount.product.yearOfPublishing}" class="tableText"></p>
             </div>
             <div class="col-sm-1 tableVerticalLineRight">
                 <p class="tableText">
-                    <span th:text="${productWithCount.count}"></span>
+                    <span th:text="${productWithCount.count}" id="countShow"></span>
                     /
-                    <span th:text="${productWithCount.total}"></span>
+                    <span th:text="${productWithCount.total}" id="totalShow"></span>
                 </p>
             </div>
             <div class="col-sm-1 tableButtonBlock tableVerticalLineRight">
                 <a th:href="@{/products/{id}(id=${productWithCount.product.id})}">
-                    <button class="internalButton">Информация</button>
+                    <button class="internalButton" id="infoButton">Информация</button>
                 </a>
             </div>
             <div class="col-sm-1 tableButtonBlock">
                 <form method="post" action="/products/delete" class="internalButton">
                     <input type="hidden" name="id" th:value="${productWithCount.product.id}">
-                    <button type="submit" class="internalButton deleteButton">Удалить из базы</button>
+                    <button type="submit" class="internalButton deleteButton" id="deleteButton">Удалить из базы</button>
                 </form>
             </div>
         </div>
     </div>
     <div class="row tableRow"></div>
-    <form> <!-- Форма добавления -->
+    <form id="formRow"> <!-- Форма добавления -->
         <div class="row tableRow">
             <div class="col-sm-1 tableVerticalLineRight">
                 <input type="text" name="isbn" th:value="${isbn}" class="internalButton" placeholder="ISBN">
@@ -92,7 +92,7 @@
             </div>
             <div class="col-sm-1 tableVerticalLineRight"></div>
             <div class="col-sm-1 tableVerticalLineRight">
-                <button type="submit" formmethod="post" formaction="/products/add" class="internalButton">Добавить</button>
+                <button type="submit" formmethod="post" formaction="/products/add" class="internalButton" id="addButton">Добавить</button>
             </div>
             <div class="col-sm-1"></div>
         </div>
@@ -112,7 +112,7 @@
                 <input id="isPresent" type="radio" name="present" th:value="1">
             </div>
             <div class="col-sm-1 tableVerticalLineRight">
-                <button type="submit" formmethod="get" formaction="/products" class="internalButton">Фильтр</button>
+                <button type="submit" formmethod="get" formaction="/products" class="internalButton" id="filterButton">Фильтр</button>
             </div>
             <div class="col-sm-1"></div>
         </div>

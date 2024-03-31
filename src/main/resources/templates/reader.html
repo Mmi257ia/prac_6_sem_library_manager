@@ -10,34 +10,34 @@
 <body>
 <div th:replace="index :: header"></div>
 <p class="pageName">Читатель <span th:text="${reader.name}"></span></p>
-<form method="post" th:action="@{/readers/{id}/edit(id=${reader.id})}" class="container-fluid   ">
+<form method="post" th:action="@{/readers/{id}/edit(id=${reader.id})}" class="container-fluid">
     <div class="row tableRow">
         <div class="col-sm">
             <span class="info">№ читательского билета:</span>
-            <span class="info" th:text="${reader.id}"></span>
+            <span class="info" th:text="${reader.id}" id="idShow"></span>
         </div>
     </div>
     <div class="row tableRow">
         <div class="col-sm-1 info tableVerticalLineRight">ФИО: </div>
         <div class="col-sm">
-            <input type="text" name="name" th:value="${reader.name}" class="internalButton info">
+            <input type="text" name="name" th:value="${reader.name}" class="internalButton info" id="nameInput">
         </div>
     </div>
     <div class="row tableRow">
         <div class="col-sm-1 info tableVerticalLineRight">Адрес: </div>
         <div class="col-sm">
-            <input type="text" name="address" th:value="${reader.address}" class="internalButton info">
+            <input type="text" name="address" th:value="${reader.address}" class="internalButton info" id="addressInput">
         </div>
     </div>
     <div class="row tableRow">
         <div class="col-sm-1 info tableVerticalLineRight">Телефон: </div>
         <div class="col-sm">
-            <input type="text" name="phone" th:value="${reader.phone}" class="internalButton info">
+            <input type="text" name="phone" th:value="${reader.phone}" class="internalButton info" id="phoneInput">
         </div>
     </div>
     <div class="row tableRow">
         <div class="col-sm">
-            <button type="submit" class="internalButton">Изменить</button>
+            <button type="submit" class="internalButton" id="editButton">Изменить</button>
         </div>
     </div>
     <div class="row tableRow"></div>
@@ -67,40 +67,40 @@
         <div class="col-sm-1"></div>
     </div>
     <div th:each="event : ${eventsList}">
-        <div class="row tableRow">
-            <div class="col-sm tableVerticalLineRight">
+        <div class="row tableRow" id="contentRow">
+            <div class="col-sm tableVerticalLineRight" id="eventShow">
                 <p th:if="${event.issue}" class="tableText">Выдача</p>
                 <p th:if="${!event.issue}" class="tableText">Возврат</p>
             </div>
             <div class="col-sm tableVerticalLineRight">
                 <a th:href="@{/books/{id}(id=${event.bookId})}">
-                    <p th:text="${event.bookId}" class="tableText"></p>
+                    <p th:text="${event.bookId}" class="tableText" id="bookIdShow"></p>
                 </a>
             </div>
             <div class="col-sm tableVerticalLineRight">
                 <a th:href="@{/products?name={name}(name=${event.bookName})}">
-                    <p th:text="${event.bookName}" class="tableText"></p>
+                    <p th:text="${event.bookName}" class="tableText" id="bookNameShow"></p>
                 </a>
             </div>
             <div class="col-sm tableVerticalLineRight">
-                <p th:text="${event.date}" class="tableText"></p>
+                <p th:text="${event.date}" class="tableText" id="dateShow"></p>
             </div>
-            <div class="col-sm tableVerticalLineRight">
+            <div class="col-sm tableVerticalLineRight" id="deadlineShow">
                 <p th:if="${event.deadline == null}" class="tableText">-</p>
                 <p th:text="${event.deadline}" class="tableText"></p>
             </div>
             <form method="post" th:action="@{/readers/{id}/extend(id=${reader.id})}" th:if="${event.isCurrentlyIssued}" class="inlineForm">
                 <input type="hidden" name="issueId" th:value="${event.issueId}">
                 <div class="col-sm-1 tableVerticalLineRight">
-                    <input type="date" name="date" class="internalButton">
+                    <input type="date" name="date" class="internalButton" id="extendInput">
                 </div>
                 <div class="col-sm-1 tableVerticalLineRight">
-                    <button type="submit" class="internalButton">Изменить срок возврата</button>
+                    <button type="submit" class="internalButton" id="extendButton">Изменить срок возврата</button>
                 </div>
             </form>
             <form method="post" action="/return" th:if="${event.isCurrentlyIssued}" class="col-sm-1 tableVerticalLineRight">
                 <input type="hidden" name="bookId" th:value="${event.bookId}">
-                <button type="submit" class="internalButton">Вернуть книгу</button>
+                <button type="submit" class="internalButton" id="returnButton">Вернуть книгу</button>
             </form>
             <div class="col-sm-1 tableVerticalLineRight" th:if="${!event.isCurrentlyIssued}"></div>
             <div class="col-sm-1 tableVerticalLineRight" th:if="${!event.isCurrentlyIssued}"></div>
@@ -111,10 +111,9 @@
     <div class="row tableRow">
         <div class="col-sm tableVerticalLineRight"></div>
         <div class="col-sm tableVerticalLineRight">
-            <form method="get" action="/issue">
-                <input type="hidden" name="readerId" th:value="${reader.id}">
-                <button type="submit" class="internalButton">Выдать книгу</button>
-            </form>
+            <a th:href="@{/issue?readerId={readerId}(readerId=${reader.id})}">
+                <button class="internalButton" id="issueButton">Выдать книгу</button>
+            </a>
         </div>
         <div class="col-sm tableVerticalLineRight"></div>
     </div>

@@ -12,7 +12,7 @@
 <p class="pageName">История</p>
 
 <div class="container-fluid" style="width: 100%;">
-    <div class="row" style="border-bottom: 1px solid black;">
+    <div class="row">
         <div class="col-sm-3" style="text-align: right;">
             <p>Фильтр:</p>
         </div>
@@ -27,7 +27,7 @@
                 <label for="readerId">№ чит. билета: </label>
                 <input id="readerId" type="text" name="readerId" th:value="${readerId}">
 
-                <button type="submit">Отфильтровать</button>
+                <button type="submit" id="filterButton">Отфильтровать</button>
             </form>
         </div>
     </div>
@@ -58,35 +58,35 @@
             </div>
         </div>
     <div th:each="event : ${eventsList}">
-        <div class="row tableRow">
-            <div class="col-sm tableVerticalLineRight">
+        <div class="row tableRow" id="contentRow">
+            <div class="col-sm tableVerticalLineRight" id="eventShow">
                 <p th:if="${event.issue}" class="tableText">Выдача</p>
                 <p th:if="${!event.issue}" class="tableText">Возврат</p>
             </div>
             <div class="col-sm tableVerticalLineRight">
                 <a th:href="@{/books/{id}(id=${event.bookId})}">
-                    <p th:text="${event.bookId}" class="tableText"></p>
+                    <p th:text="${event.bookId}" class="tableText" id="bookIdShow"></p>
                 </a>
             </div>
             <div class="col-sm tableVerticalLineRight">
                 <a th:href="@{/products?name={name}(name=${event.bookName})}">
-                    <p th:text="${event.bookName}" class="tableText"></p>
+                    <p th:text="${event.bookName}" class="tableText" id="bookNameShow"></p>
                 </a>
             </div>
             <div class="col-sm tableVerticalLineRight">
                 <a th:href="@{/readers/{id}(id=${event.readerId})}">
-                    <p th:text="${event.readerId}" class="tableText"></p>
+                    <p th:text="${event.readerId}" class="tableText" id="readerIdShow"></p>
                 </a>
             </div>
             <div class="col-sm tableVerticalLineRight">
                 <a th:href="@{/readers?name={name}(name=${event.readerName})}">
-                    <p th:text="${event.readerName}" class="tableText"></p>
+                    <p th:text="${event.readerName}" class="tableText" id="readerNameShow"></p>
                 </a>
             </div>
             <div class="col-sm tableVerticalLineRight">
-                <p th:text="${event.date}" class="tableText"></p>
+                <p th:text="${event.date}" class="tableText" id="dateShow"></p>
             </div>
-            <div class="col-sm">
+            <div class="col-sm" id="deadlineShow">
                 <p th:if="${event.deadline == null}" class="tableText">-</p>
                 <p th:text="${event.deadline}" class="tableText"></p>
             </div>
