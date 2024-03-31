@@ -8,7 +8,7 @@
     <title>Читатель</title>
 </head>
 <body>
-<div th:replace="index :: header"></div>
+<div th:replace="~{index :: header}"></div>
 <p class="pageName">Читатель <span th:text="${reader.name}"></span></p>
 <form method="post" th:action="@{/readers/{id}/edit(id=${reader.id})}" class="container-fluid">
     <div class="row tableRow">

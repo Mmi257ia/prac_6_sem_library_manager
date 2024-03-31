@@ -9,7 +9,7 @@
     <title>Экземпляр книги</title>
 </head>
 <body>
-<div th:replace="index :: header"></div>
+<div th:replace="~{index :: header}"></div>
 <p class="pageName">
     Экземпляр книги "<a th:href="@{/products/{id}(id=${book.product.id})}" th:text="${book.product.name}" id="productNameShow"></a>"
 </p>

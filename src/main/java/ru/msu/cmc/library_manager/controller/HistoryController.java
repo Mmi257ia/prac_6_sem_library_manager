@@ -75,9 +75,6 @@ public class HistoryController {
         List<Issue> returnsList = issueDAO.getIssuesByFilter(filter);
         List<Event> eventsList = Event.eventsFromIssuesSeparated(issuesList, returnsList);
 
-        System.out.println(issuesList);
-        System.out.println(returnsList);
-
         // from latest to earliest
         eventsList.sort(Comparator.reverseOrder());
         model.addAttribute("eventsList", eventsList);

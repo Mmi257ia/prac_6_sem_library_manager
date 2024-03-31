@@ -1,15 +1,15 @@
--- DROP TABLE IF EXISTS author, publisher, product, book, reader, issue CASCADE;
--- DROP FUNCTION IF EXISTS product_authors_checking_func CASCADE;
+DROP TABLE IF EXISTS author, publisher, product, book, reader, issue CASCADE;
+DROP FUNCTION IF EXISTS product_authors_checking_func CASCADE;
 -- DROP ROLE IF EXISTS website_backend;
 
-CREATE ROLE website_backend WITH
-  LOGIN
-  SUPERUSER
-  INHERIT
-  CREATEDB
-  CREATEROLE
-  REPLICATION
-  PASSWORD '12345678';
+-- CREATE ROLE website_backend WITH
+--   LOGIN
+--   SUPERUSER
+--   INHERIT
+--   CREATEDB
+--   CREATEROLE
+--   REPLICATION
+--   PASSWORD '12345678';
 
 CREATE TABLE author (
     author_id serial PRIMARY KEY,
