@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.msu.cmc.library_manager.DAO.*;
+import ru.msu.cmc.library_manager.lib.ProductWithCountAndAuthors;
 import ru.msu.cmc.library_manager.model.*;
 
 import java.util.*;
@@ -25,46 +26,6 @@ public class ProductsController {
     @Autowired
     private IssueDAO issueDAO;
 
-    // Helper class to store books count and authors is objects
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Getter
-    @ToString
-    class ProductWithCountAndAuthors {
-        Product product;
-        int count; // in library
-        int total; // in db
-        List<Author> authors;
-        String authorsString;
-        public ProductWithCountAndAuthors(Product product) {
-            this.product = product;
-            int resCount = 0;
-            List<Book> books = bookDAO.getBooksByFilter(new BookDAO.Filter(product, null, null));
-            total = books.size();
-            for (Book book : books) {
-                List<Book> bookInList = new ArrayList<Book>();
-                bookInList.add(book);
-                IssueDAO.Filter filter = new IssueDAO.Filter();
-                filter.setBooks(bookInList);
-                filter.setIsReturned(false);
-                List<Issue> issues = issueDAO.getIssuesByFilter(filter);
-                if (issues.isEmpty())
-                    resCount++;
-            }
-            count = resCount;
-            authors = new ArrayList<Author>();
-            for (Integer authorId : product.getAuthors())
-                if (authorId != null)
-                    authors.add(authorDAO.getById(authorId));
-
-            authorsString = "";
-            for (Author author : authors) {
-                if (!authorsString.isEmpty())
-                    authorsString += ", ";
-                authorsString += author.getName();
-            }
-        }
-    }
 
     private List<Author> getAuthorsList(String authors) throws IllegalArgumentException {
         if (authors == null || authors.isEmpty())
@@ -125,7 +86,7 @@ public class ProductsController {
         List<Product> productsListNoCount = productDAO.getProductsByFilter(filter);
         List<ProductWithCountAndAuthors> productsList = new ArrayList<ProductWithCountAndAuthors>();
         for (Product product : productsListNoCount) {
-            ProductWithCountAndAuthors pwcaa = new ProductWithCountAndAuthors(product);
+            ProductWithCountAndAuthors pwcaa = new ProductWithCountAndAuthors(product, authorDAO, bookDAO, issueDAO);
             if (present != null) {
                 if (present == 0 && pwcaa.getCount() == 0 || present == 1 && pwcaa.getCount() > 0)
                     productsList.add(pwcaa);
